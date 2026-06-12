@@ -10,16 +10,10 @@ import { TaskTypesModule } from './task-types/task-types.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'tasksdb',
+      type: 'better-sqlite3',
+      database: 'tasksdb.sqlite', // a single file in the project — no server, no Docker
       entities: [User, Task, TaskType],
-      // Auto-creates the `users` + `task_types` tables and ADDS new columns
-      // (status, dueDate, archived, userId, typeId) to the existing `tasks` table.
-      // Existing columns/rows are preserved.
+      // Auto-creates all tables (users, tasks, task_types) in the SQLite file.
       synchronize: true,
     }),
     AuthModule,

@@ -14,8 +14,7 @@ export class Task {
   @Column({ type: 'varchar', length: 255, default: '' })
   description: string;
 
-  // ── Existing column (kept so TypeORM doesn't drop it) ──
-  @Column({ type: 'tinyint', default: 0 })
+  @Column({ type: 'boolean', default: false })
   completed: boolean;
 
   // ── New columns added by TypeORM synchronize ──
@@ -25,7 +24,7 @@ export class Task {
   @Column({ type: 'varchar', length: 10, nullable: true })
   dueDate: string | null; // 'YYYY-MM-DD'
 
-  @Column({ type: 'tinyint', default: 0 })
+  @Column({ type: 'boolean', default: false })
   archived: boolean;
 
   // Optional reference to a user-defined task type (category + color).
