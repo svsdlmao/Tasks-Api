@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { TaskStatus } from './task.entity';
 
 const STATUSES = ['Todo', 'In Progress', 'Done'];
@@ -18,6 +18,10 @@ export class CreateTaskDto {
   @IsOptional()
   @IsString()
   dueDate?: string | null;
+
+  @IsOptional()
+  @IsInt()
+  typeId?: number | null;
 }
 
 export class UpdateTaskDto {
@@ -36,4 +40,8 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsString()
   dueDate?: string | null;
+
+  @IsOptional()
+  @IsInt()
+  typeId?: number | null;
 }

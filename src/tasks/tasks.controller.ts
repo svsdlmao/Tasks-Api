@@ -14,6 +14,11 @@ export class TasksController {
     return this.tasks.findAll(user.id);
   }
 
+  @Get()
+  findAllByPages(@CurrentUser() user: AuthUser) {
+    return this.tasks.findAll(user.id);
+  }
+
   @Post()
   create(@CurrentUser() user: AuthUser, @Body() dto: CreateTaskDto) {
     return this.tasks.create(user.id, dto);

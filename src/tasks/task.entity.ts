@@ -28,6 +28,10 @@ export class Task {
   @Column({ type: 'tinyint', default: 0 })
   archived: boolean;
 
+  // Optional reference to a user-defined task type (category + color).
+  @Column({ type: 'int', nullable: true })
+  typeId: number | null;
+
   @ManyToOne(() => User, (user) => user.tasks, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User | null;

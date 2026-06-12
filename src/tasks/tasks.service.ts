@@ -23,6 +23,7 @@ export class TasksService {
       description: (dto.description ?? '').trim(),
       status: dto.status ?? 'Todo',
       dueDate: dto.dueDate || null,
+      typeId: dto.typeId ?? null,
       completed: (dto.status ?? 'Todo') === 'Done',
       archived: false,
       userId,
@@ -36,6 +37,7 @@ export class TasksService {
     if (dto.description !== undefined) task.description = dto.description.trim();
     if (dto.status !== undefined)    { task.status = dto.status; task.completed = dto.status === 'Done'; }
     if (dto.dueDate !== undefined)     task.dueDate = dto.dueDate || null;
+    if (dto.typeId !== undefined)      task.typeId = dto.typeId ?? null;
     return this.tasks.save(task);
   }
 
