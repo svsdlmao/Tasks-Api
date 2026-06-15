@@ -7,9 +7,16 @@ import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TaskTypesModule } from './task-types/task-types.module';
 import { join } from 'path';
+import { AiModule } from './ai/ai.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration]
+    }),
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
       database: join(process.cwd(), 'data', 'tasksdb.sqlite'), // a single file in the project — no server, no Docker
@@ -21,6 +28,7 @@ import { join } from 'path';
     AuthModule,
     TasksModule,
     TaskTypesModule,
+    AiModule
   ],
 })
 export class AppModule {}
