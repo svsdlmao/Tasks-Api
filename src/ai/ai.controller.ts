@@ -10,4 +10,9 @@ export class AiController {
   async help(@Body() dto: AiHelpDto) {
     return this.aiService.getHelp(dto);
   }
+
+  
+  async downloadDb(){
+
+  }
 }
