@@ -7,6 +7,7 @@ import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
 import { SignupDto } from './dto';
 import { AuthUser } from './current-user.decorator';
+import { MirrorService } from '../mirror/mirror.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     @InjectRepository(User) private users: Repository<User>,
     @InjectRepository(Task) private tasks: Repository<Task>,
     private jwt: JwtService,
+    private mirror: MirrorService,
   ) {}
 
   async signup(dto: SignupDto) {
@@ -24,6 +26,7 @@ export class AuthService {
     const user = await this.users.save(
       this.users.create({ name: dto.name.trim(), email: dto.email.trim(), password: hash }),
     );
+    this.mirror.upsertUser(user);
     return this.sign(user);
   }
 
@@ -45,6 +48,7 @@ export class AuthService {
     // Tasks are removed via FK ON DELETE CASCADE, but remove explicitly to be safe.
     await this.tasks.delete({ userId });
     await this.users.delete({ id: userId });
+    this.mirror.deleteUserCascade(userId);
     return { deleted: true };
   }
 

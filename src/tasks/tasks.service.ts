@@ -3,10 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto, UpdateTaskDto } from './dto';
+import { MirrorService } from '../mirror/mirror.service';
 
 @Injectable()
 export class TasksService {
-  constructor(@InjectRepository(Task) private tasks: Repository<Task>) {}
+  constructor(
+    @InjectRepository(Task) private tasks: Repository<Task>,
+    private mirror: MirrorService,
+  ) {}
 
   /** All of a user's tasks, split into active and archived lists. */
   async findAll(userId: number) {
@@ -28,7 +32,9 @@ export class TasksService {
       archived: false,
       userId,
     });
-    return this.tasks.save(task);
+    const saved = await this.tasks.save(task);
+    this.mirror.upsertTask(saved);
+    return saved;
   }
 
   async update(userId: number, id: number, dto: UpdateTaskDto) {
@@ -38,20 +44,26 @@ export class TasksService {
     if (dto.status !== undefined)    { task.status = dto.status; task.completed = dto.status === 'Done'; }
     if (dto.dueDate !== undefined)     task.dueDate = dto.dueDate || null;
     if (dto.typeId !== undefined)      task.typeId = dto.typeId ?? null;
-    return this.tasks.save(task);
+    const saved = await this.tasks.save(task);
+    this.mirror.upsertTask(saved);
+    return saved;
   }
 
   /** "Delete" = move to archive (matches the frontend behaviour). */
   async archive(userId: number, id: number) {
     const task = await this.findOwned(userId, id);
     task.archived = true;
-    return this.tasks.save(task);
+    const saved = await this.tasks.save(task);
+    this.mirror.upsertTask(saved);
+    return saved;
   }
 
   async restore(userId: number, id: number) {
     const task = await this.findOwned(userId, id);
     task.archived = false;
-    return this.tasks.save(task);
+    const saved = await this.tasks.save(task);
+    this.mirror.upsertTask(saved);
+    return saved;
   }
 
   private async findOwned(userId: number, id: number): Promise<Task> {

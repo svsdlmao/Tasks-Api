@@ -1,6 +1,13 @@
 # Dependencies
 /node_modules
 
+# Local SQLite database (runtime data — never commit; recreated on boot)
+/data
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+
 # Logs
 *.log
 npm-debug.log*
