@@ -12,7 +12,4 @@ export class AiController {
   }
 
   
-  async downloadDb(){
-
-  }
 }
