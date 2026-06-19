@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../users/user.entity';
+import { encrypt, decrypt } from '../crypto/crypto.utils';
 
 export type TaskStatus = 'Todo' | 'In Progress' | 'Done';
 
@@ -8,11 +9,11 @@ export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  title: string;
+  @Column({ type: 'text', transformer: { to: encrypt, from: decrypt } })
+title: string;
 
-  @Column({ type: 'varchar', length: 255, default: '' })
-  description: string;
+  @Column({ type: 'text', default: '', transformer: { to: encrypt, from: decrypt } })
+description: string;
 
   @Column({ type: 'boolean', default: false })
   completed: boolean;
