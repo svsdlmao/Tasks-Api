@@ -8,15 +8,17 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
-import { jwtConstants } from './jwt.constants';
+import { getJwtSecret, jwtExpiresIn } from './jwt.constants';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Task]),
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: getJwtSecret(),
+        signOptions: { expiresIn: jwtExpiresIn },
+      }),
     }),
   ],
   controllers: [AuthController],
